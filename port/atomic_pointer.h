@@ -19,14 +19,11 @@
 #define PORT_ATOMIC_POINTER_H_
 
 #include <stdint.h>
-#ifdef LEVELDB_ATOMIC_PRESENT
+#if defined(LEVELDB_ATOMIC_PRESENT) || defined(OS_MACOSX)
 #include <atomic>
 #endif
 #ifdef OS_WIN
 #include <windows.h>
-#endif
-#ifdef OS_MACOSX
-#include <libkern/OSAtomic.h>
 #endif
 
 #if defined(_M_X64) || defined(__x86_64__)
@@ -80,7 +77,7 @@ class AtomicPointer {
 // Mac OS
 #elif defined(OS_MACOSX)
 inline void MemoryBarrier() {
-  OSMemoryBarrier();
+  std::atomic_thread_fence(std::memory_order_seq_cst);
 }
 #define LEVELDB_HAVE_MEMORY_BARRIER
 
