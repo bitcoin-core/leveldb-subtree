@@ -417,7 +417,7 @@ Status DBImpl::RecoverLogFile(uint64_t log_number, bool last_log,
   // large sequence numbers).
   log::Reader reader(file, &reporter, true /*checksum*/, 0 /*initial_offset*/);
   Log(options_.info_log, "Recovering log #%llu",
-      (unsigned long long)log_number);
+      static_cast<unsigned long long>(log_number));
 
   // Read all the records and add to a memtable
   std::string scratch;
@@ -507,7 +507,7 @@ Status DBImpl::WriteLevel0Table(MemTable* mem, VersionEdit* edit,
   pending_outputs_.insert(meta.number);
   Iterator* iter = mem->NewIterator();
   Log(options_.info_log, "Level-0 table #%llu: started",
-      (unsigned long long)meta.number);
+      static_cast<unsigned long long>(meta.number));
 
   Status s;
   {
@@ -517,7 +517,7 @@ Status DBImpl::WriteLevel0Table(MemTable* mem, VersionEdit* edit,
   }
 
   Log(options_.info_log, "Level-0 table #%llu: %lld bytes %s",
-      (unsigned long long)meta.number, (unsigned long long)meta.file_size,
+      static_cast<unsigned long long>(meta.number), static_cast<unsigned long long>(meta.file_size),
       s.ToString().c_str());
   delete iter;
   pending_outputs_.erase(meta.number);
@@ -859,9 +859,9 @@ Status DBImpl::FinishCompactionOutputFile(CompactionState* compact,
     delete iter;
     if (s.ok()) {
       Log(options_.info_log, "Generated table #%llu@%d: %lld keys, %lld bytes",
-          (unsigned long long)output_number, compact->compaction->level(),
-          (unsigned long long)current_entries,
-          (unsigned long long)current_bytes);
+          static_cast<unsigned long long>(output_number), compact->compaction->level(),
+          static_cast<unsigned long long>(current_entries),
+          static_cast<unsigned long long>(current_bytes));
     }
   }
   return s;

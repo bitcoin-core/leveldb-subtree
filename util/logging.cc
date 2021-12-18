@@ -18,7 +18,7 @@ namespace leveldb {
 
 void AppendNumberTo(std::string* str, uint64_t num) {
   char buf[30];
-  snprintf(buf, sizeof(buf), "%llu", (unsigned long long)num);
+  snprintf(buf, sizeof(buf), "%llu", static_cast<unsigned long long>(num));
   str->append(buf);
 }
 
