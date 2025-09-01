@@ -537,7 +537,6 @@ Status DBImpl::WriteLevel0Table(MemTable* mem, VersionEdit* edit,
 
   CompactionStats stats;
   stats.micros = env_->NowMicros() - start_micros;
-  stats.bytes_written = meta.file_size;
   stats_[level].Add(stats);
   return s;
 }
@@ -1028,9 +1027,6 @@ Status DBImpl::DoCompactionWork(CompactionState* compact) {
       stats.bytes_read += compact->compaction->input(which, i)->file_size;
     }
   }
-  for (size_t i = 0; i < compact->outputs.size(); i++) {
-    stats.bytes_written += compact->outputs[i].file_size;
-  }
 
   mutex_.Lock();
   stats_[compact->compaction->level() + 1].Add(stats);
@@ -1412,11 +1408,10 @@ bool DBImpl::GetProperty(const Slice& property, std::string* value) {
     for (int level = 0; level < config::kNumLevels; level++) {
       int files = versions_->NumLevelFiles(level);
       if (stats_[level].micros > 0 || files > 0) {
-        snprintf(buf, sizeof(buf), "%3d %8d %8.0f %9.0f %8.0f %9.0f\n", level,
+        snprintf(buf, sizeof(buf), "%3d %8d %8.0f %9.0f %8.0f\n", level,
                  files, versions_->NumLevelBytes(level) / 1048576.0,
                  stats_[level].micros / 1e6,
-                 stats_[level].bytes_read / 1048576.0,
-                 stats_[level].bytes_written / 1048576.0);
+                 stats_[level].bytes_read / 1048576.0);
         value->append(buf);
       }
     }
