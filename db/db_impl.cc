@@ -973,15 +973,6 @@ Status DBImpl::DoCompactionWork(CompactionState* compact) {
 
       last_sequence_for_key = ikey.sequence;
     }
-#if 0
-    Log(options_.info_log,
-        "  Compact: %s, seq %d, type: %d %d, drop: %d, is_base: %d, "
-        "%d smallest_snapshot: %d",
-        ikey.user_key.ToString().c_str(),
-        (int)ikey.sequence, ikey.type, kTypeValue, drop,
-        compact->compaction->IsBaseLevelForKey(ikey.user_key),
-        (int)last_sequence_for_key, (int)compact->smallest_snapshot);
-#endif
 
     if (!drop) {
       // Open output file if necessary
