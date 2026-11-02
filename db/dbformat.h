@@ -148,11 +148,6 @@ class InternalKey {
 
   Slice user_key() const { return ExtractUserKey(rep_); }
 
-  void SetFrom(const ParsedInternalKey& p) {
-    rep_.clear();
-    AppendInternalKey(&rep_, p);
-  }
-
   void Clear() { rep_.clear(); }
 
   std::string DebugString() const;
