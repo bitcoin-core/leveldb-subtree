@@ -64,7 +64,6 @@ class MemTable {
 
  private:
   friend class MemTableIterator;
-  friend class MemTableBackwardIterator;
 
   struct KeyComparator {
     const InternalKeyComparator comparator;
