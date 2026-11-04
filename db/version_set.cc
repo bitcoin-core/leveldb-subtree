@@ -39,7 +39,7 @@ static int64_t ExpandedCompactionByteSizeLimit(const Options* options) {
   return 25 * TargetFileSize(options);
 }
 
-static double MaxBytesForLevel(const Options*, int level) {
+static double MaxBytesForLevel(int level) {
   // Note: the result for level zero is not really used since we set
   // the level-0 compaction threshold based on number of files.
 
@@ -52,8 +52,7 @@ static double MaxBytesForLevel(const Options*, int level) {
   return result;
 }
 
-static uint64_t MaxFileSizeForLevel(const Options* options, int) {
-  // We could vary per level to reduce number of files?
+static uint64_t MaxFileSizeForLevel(const Options* options) {
   return TargetFileSize(options);
 }
 
@@ -1046,7 +1045,7 @@ void VersionSet::Finalize(Version* v) {
       // Compute the ratio of current size to size limit.
       const uint64_t level_bytes = TotalFileSize(v->files_[level]);
       score =
-          static_cast<double>(level_bytes) / MaxBytesForLevel(options_, level);
+          static_cast<double>(level_bytes) / MaxBytesForLevel(level);
     }
 
     if (score > best_score) {
@@ -1448,7 +1447,7 @@ Compaction* VersionSet::CompactRange(int level, const InternalKey* begin,
   // and we must not pick one file and drop another older file if the
   // two files overlap.
   if (level > 0) {
-    const uint64_t limit = MaxFileSizeForLevel(options_, level);
+    const uint64_t limit = MaxFileSizeForLevel(options_);
     uint64_t total = 0;
     for (size_t i = 0; i < inputs.size(); i++) {
       uint64_t s = inputs[i]->file_size;
@@ -1470,7 +1469,7 @@ Compaction* VersionSet::CompactRange(int level, const InternalKey* begin,
 
 Compaction::Compaction(const Options* options, int level)
     : level_(level),
-      max_output_file_size_(MaxFileSizeForLevel(options, level)),
+      max_output_file_size_(MaxFileSizeForLevel(options)),
       input_version_(nullptr),
       grandparent_index_(0),
       seen_key_(false),

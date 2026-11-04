@@ -16,19 +16,6 @@
 
 namespace leveldb {
 
-#if 0
-static void DumpInternalIter(Iterator* iter) {
-  for (iter->SeekToFirst(); iter->Valid(); iter->Next()) {
-    ParsedInternalKey k;
-    if (!ParseInternalKey(iter->key(), &k)) {
-      fprintf(stderr, "Corrupt '%s'\n", EscapeString(iter->key()).c_str());
-    } else {
-      fprintf(stderr, "@ '%s'\n", k.DebugString().c_str());
-    }
-  }
-}
-#endif
-
 namespace {
 
 // Memtables and sstables that make the DB representation contain

@@ -109,8 +109,6 @@ class Version {
   int PickLevelForMemTableOutput(const Slice& smallest_user_key,
                                  const Slice& largest_user_key);
 
-  int NumFiles(int level) const { return files_[level].size(); }
-
   // Return a human readable string that describes this version's contents.
   std::string DebugString() const;
 
