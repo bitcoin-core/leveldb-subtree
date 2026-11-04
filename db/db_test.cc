@@ -469,25 +469,6 @@ class DBTest {
     MakeTables(config::kNumLevels, smallest, largest);
   }
 
-  void DumpFileCounts(const char* label) {
-    fprintf(stderr, "---\n%s:\n", label);
-    fprintf(
-        stderr, "maxoverlap: %lld\n",
-        static_cast<long long>(dbfull()->TEST_MaxNextLevelOverlappingBytes()));
-    for (int level = 0; level < config::kNumLevels; level++) {
-      int num = NumTableFilesAtLevel(level);
-      if (num > 0) {
-        fprintf(stderr, "  level %3d : %d files\n", level, num);
-      }
-    }
-  }
-
-  std::string DumpSSTableList() {
-    std::string property;
-    db_->GetProperty("leveldb.sstables", &property);
-    return property;
-  }
-
   std::string IterStatus(Iterator* iter) {
     std::string result;
     if (iter->Valid()) {
